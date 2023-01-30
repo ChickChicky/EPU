@@ -6,9 +6,9 @@ Anyways, this is a CPU I made in Logisim-Evolution for fun. It uses 48-bit wide 
 
 The Instructions look like this:<br>
 `IIIIIIIIIIIIIIIIAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB`<br>
-The first part is a 16-bit opcode, and the two other ones are 16-bit arguments that are interpreted differently from one instruction to another.
+The first part is a 16-bit opcode, and the two other ones are 16-bit arguments that are interpreted differently from one instruction to another, but usually `A` represents an input/source address and `B` and output/destination address.
 
-The memory is weirdly managed: the 8 first addresses are for registers and the rest is RAM.<br>
+The memory is split in two, the first 8 bytes are dedicated to registers and expansion ports and the rest is RAM (making the 8 first bytes of RAM unusable)<br>
 * `00`: REG A
 * `01`: REG B (ALU Mode)
 * `02`: REG C (ALU A)
@@ -20,7 +20,7 @@ The memory is weirdly managed: the 8 first addresses are for registers and the r
 
 The ALU modes are described in [`ALU Modes`](#alu-modes).
 
-Writing machine code is a bit borring so I made a small compiler to turn some code into machine code that can then be ran on the EPU itself.
+Writing machine code is a bit borring so I made a small compiler to turn some assembly into machine code that can then be ran on the EPU itself.
 
 In order to do that, I have provided a few examples in [`examples/`](examples) as well as a [`reference program`](examples/reference.asm).
 
@@ -32,28 +32,28 @@ I am also working on errors, as well as macros, functions, a call stack and more
 
 # ALU
 
-The communication with the ALU can be done though 4 ports, 3 inputs and one output, 
+The communication with the ALU can be done though 4 ports, 3 inputs and 1 output, 
 
 ## ALU Modes
 The ALU can do 16 different operations:
-| ALU Mode |  Variable  |            Description            |
-| -------- | ---------- | --------------------------------- |
-|   `00`   | `alu_sum`  | adds `A` and  `B`                 |
-|   `01`   | `alu_div`  | divides `A` by `B`                |
-|   `02`   | `alu_mod`  | returns the remainder of `A`/`B`  |
-|   `03`   | `alu_div`  | substracts `B` from `A`           |
-|   `04`   | `alu_mod`  | multiplies `A` and `B`            |
-|   `05`   | `alu_and`  | bitwise and between `A` and `B`   |
-|   `06`   | `alu_or`   | bitwise or between `A` and `B`    |
-|   `07`   | `alu_xor`  | bitwise xor between `A` and `B`   |
-|   `08`   | `alu_nand` | bitwise nand between `A` and `B`  |
-|   `09`   | `alu_nor`  | bitwise nor between `A` and `B`   |
-|   `0A`   | `alu_nxor` | bitwise nxor between `A` and `B`  |
-|   `0B`   | `alu_shl`  | shifts `A` left `B` times         |
-|   `0C`   | `alu_shr`  | shifts `A` right `B` times        |
-|   `0D`   | `alu_rol`  | rotates `A` left `B` times        |
-|   `0E`   | `alu_ror`  | rotates `A` right `B` times       |
-|   `0F`   | `alu_rng`  | returns a pseudo-random number    |
+| ALU Mode |  Variable  |           Description          |
+| -------- | ---------- | ------------------------------ |
+|   `00`   | `alu_sum`  | `A` +  `B`                     |
+|   `01`   | `alu_div`  | `A` / `B`                      |
+|   `02`   | `alu_mod`  | `A` % `B`                      |
+|   `03`   | `alu_div`  | `A` - `B`                      |
+|   `04`   | `alu_mod`  | `A` * `B`                      |
+|   `05`   | `alu_and`  | `A` & `B`                      |
+|   `06`   | `alu_or`   | `A` \| `B`                     |
+|   `07`   | `alu_xor`  | `A` ^ `B`                      |
+|   `08`   | `alu_nand` | ~( `A` & `B` )                 |
+|   `09`   | `alu_nor`  | ~( `A` \| `B` )                |
+|   `0A`   | `alu_nxor` | ~( `A` ^ `B` )                 |
+|   `0B`   | `alu_shl`  | `A` << `B`                     |
+|   `0C`   | `alu_shr`  | `A` >> `B`                     |
+|   `0D`   | `alu_rol`  | `A` << `B` (rotation)          |
+|   `0E`   | `alu_ror`  | `A` >> `B` (rotation)          |
+|   `0F`   | `alu_rng`  | returns a pseudo-random number |
 
 For convenience, there are a few variables related to the ALU, like `alu_mode`, which is the register for the ALU mode, `alu_a` and `alu_b` for the two arguments, `alu_q` for the ALU output, and all the modes as described above.
 

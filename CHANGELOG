@@ -1,0 +1,7 @@
+# 28/10/2022
+* Original version
+
+# 30/01/2023
+* Finished the implementation for pointer reading
+  It is now possible to load data from a memory location stored in memory
+* (Planning on pointer writing)
