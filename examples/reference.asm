@@ -8,12 +8,12 @@ IMD $0004, $0001
 
 ; Another useful command is CPY, it copies a value from one place to another
 
-; The line below copies the value in address 0x1 into address 0x2
+; The line below copies the value to address 0x1 into address 0x2
 CPY $0001, $0002
 
 ; CMP compares the values at the two provided memory locations
 
-; This compares the values in addresses 0x1 and 0x2
+; This compares the values at addresses 0x1 and 0x2
 CMP $0001, $0002
 
 ; JMP jumps unconditionally to the provided location (an absolute location can also be provided but it's much better just to use labels)
@@ -36,16 +36,23 @@ my_label:
 VAR my_var, 20
 ; It can be referenced later on, or even before and at compilation, they will be replaced by 20
 
-; Being able of writing data to arbirary places in memory is also a very important thing,
-; the PTR instruction is made for this.
+; Being able of reading data from arbirary places in memory is also a very important thing,
+; the RPT (Read PoinTer) instruction is made for this.
 ; It takes a first argument, the address of the pointer, and an adress where to store the retreived value
 
 ; This takes the address stored in memory location 1 (4), reads the value at that location (0 if the RAM was cleared before) and writes it at the memory location specified in 'my_var' (20)
 ; Effectively copying the value at adress 4 to memory location 20
-PTR $0001, my_var
+RPT $0001, my_var
+
+; A similar instruction exists, but for writing data to arbitrary addresses,
+; the WPT (Write PoinTer) allows writing data from memory to an adress specified in memory.
+; The first argument is the location of the data to be written, and the second one is where to store the data
+
+; Here, the value at memory location 20 is copied (0 is RAM was cleared before) to the memory location indicated in memory location 1 (4)
+WPT my_var, $0001
 
 ; You can  also use #include to import code, which for now only reliably works for basic JS libs
 ; For now, JS libraries can only define variables
 
-; Includes some constants defined in '/libs/stdlib.js' like all the names for the ALU modes and registers
+; Includes the constants defined in '/libs/stdlib.js' like all the names for the ALU modes and registers
 #incldue stdlib

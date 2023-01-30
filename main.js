@@ -135,8 +135,11 @@ function processInstruction(i) {
         case 'jle':
             opcode = 0x03;
             break;
-        case 'ptr':
+        case 'rpt':
             opcode = 0x04;
+            break;
+        case 'wpt':
+            opcode = 0x05;
             break;
     }
     let ji = {
